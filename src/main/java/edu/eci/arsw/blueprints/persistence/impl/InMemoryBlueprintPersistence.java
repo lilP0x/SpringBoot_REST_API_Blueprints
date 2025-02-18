@@ -10,13 +10,21 @@ import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
 import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author hcadavid
  */
+
+@Service
 public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
 
     private final Map<Tuple<String,String>,Blueprint> blueprints=new HashMap<>();
@@ -28,7 +36,6 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
         blueprints.put(new Tuple<>(bp.getAuthor(),bp.getName()), bp);
         
     }    
-    
     @Override
     public void saveBlueprint(Blueprint bp) throws BlueprintPersistenceException {
         if (blueprints.containsKey(new Tuple<>(bp.getAuthor(),bp.getName()))){
@@ -38,12 +45,27 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
             blueprints.put(new Tuple<>(bp.getAuthor(),bp.getName()), bp);
         }        
     }
-
     @Override
     public Blueprint getBlueprint(String author, String bprintname) throws BlueprintNotFoundException {
-        return blueprints.get(new Tuple<>(author, bprintname));
-    }
-
+        Blueprint blueprint = blueprints.get(new Tuple<>(author, bprintname));
+        if (blueprint == null){
+            throw new BlueprintNotFoundException("The blueprint not found");
+        }
+        return blueprint;
+    } 
     
+    public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException{
+        ArrayList<Blueprint> blueprint = new ArrayList<Blueprint>();
+        Set<Tuple<String, String>> keys =blueprints.keySet();
+        for (Tuple<String,String> e : keys ){
+            if(author.equals(e.o1)){
+                blueprint.add(blueprints.get(e));
+            }
+        }
+        if (blueprint.isEmpty()) {
+            throw new BlueprintNotFoundException("No blueprints found for author: " + author);
+        }
+        return new HashSet<>(blueprint);
+    }
     
 }
