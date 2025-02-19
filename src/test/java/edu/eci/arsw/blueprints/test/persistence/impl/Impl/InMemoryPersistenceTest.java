@@ -44,18 +44,13 @@ public class InMemoryPersistenceTest {
 
 
     @Test
-    public void saveExistingBpTest() {
+    public void saveExistingBpTest() throws BlueprintPersistenceException{
         InMemoryBlueprintPersistence ibpp=new InMemoryBlueprintPersistence();
         
         Point[] pts=new Point[]{new Point(0, 0),new Point(10, 10)};
         Blueprint bp=new Blueprint("john", "thepaint",pts);
-        
-        try {
-            ibpp.saveBlueprint(bp);
-        } catch (BlueprintPersistenceException ex) {
-            fail("Blueprint persistence failed inserting the first blueprint.");
-        }
-        
+        ibpp.saveBlueprint(bp);
+       
         Point[] pts2=new Point[]{new Point(10, 10),new Point(20, 20)};
         Blueprint bp2=new Blueprint("john", "thepaint",pts2);
 
@@ -87,6 +82,16 @@ public class InMemoryPersistenceTest {
 
         } catch (BlueprintNotFoundException ex) {
             fail("Blueprint persistence failed search the blueprint.");
+        }
+    }
+
+    @Test
+    public void getNotFoundBlueprintTest(){
+        InMemoryBlueprintPersistence ibpp=new InMemoryBlueprintPersistence();
+        try {
+            Blueprint blueprint = ibpp.getBlueprint("john","thepaint");
+        } catch (BlueprintNotFoundException ex) {
+            assertEquals("The blueprint not found thepaint" , ex.getMessage());;
         }
     }
 
