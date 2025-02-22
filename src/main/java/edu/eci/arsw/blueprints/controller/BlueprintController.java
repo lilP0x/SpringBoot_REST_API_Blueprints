@@ -2,19 +2,15 @@ package edu.eci.arsw.blueprints.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import edu.eci.arsw.blueprints.services.BlueprintsServices;
 import edu.eci.arsw.blueprints.model.Blueprint;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
-
 import java.util.Collection;
 import java.util.Set;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 
 @RestController
 @RequestMapping("/app/blueprints") 
@@ -53,5 +49,4 @@ public class BlueprintController {
         bps.addNewBlueprint(blueprint);
         return ResponseEntity.ok("Guardado");
     }
-    
 }
